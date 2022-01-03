@@ -5,16 +5,14 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct DecodedData {
     uint8_t *data;
     size_t size;
 };
 
-enum PrintType {
-    PRINT_TYPE_NUM,
-    PRINT_TYPE_CHAR
-};
+enum PrintType { PRINT_TYPE_NUM, PRINT_TYPE_CHAR };
 
 static long hex_to_decimal_byte(const char *data) {
     uint_fast8_t hex_quivs[2];
@@ -48,7 +46,8 @@ static struct DecodedData *hex_decode(const char *str, size_t len) {
     return data;
 }
 
-static void print_decoded_data(const struct DecodedData *dd, enum PrintType pt) {
+static void print_decoded_data(
+    const struct DecodedData *dd, enum PrintType pt) {
     char *fmt_str = NULL;
 
     if (pt == PRINT_TYPE_NUM) {
@@ -69,6 +68,18 @@ static void *free_hex_decode(struct DecodedData *s) {
     free(s);
 
     return NULL;
+}
+
+static void strip_newline(char *line) {
+    const size_t len = strlen(line);
+
+    for (size_t i = 0; i < len; ++i) {
+        if (line[i] == '\n') {
+            /* null-terminate instead */
+            line[i] = '\0';
+            return;
+        }
+    }
 }
 
 #endif
