@@ -67,5 +67,7 @@ int main() {
         free_hex_decode(test_decrypt);
     }
 
+    decoded_data = free_hex_decode(decoded_data);
+
     return EXIT_SUCCESS;
 }
