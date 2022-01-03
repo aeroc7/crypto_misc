@@ -27,7 +27,6 @@ static long hex_to_decimal_byte(const char *data) {
     return (hex_quivs[0] * 16) + hex_quivs[1];
 }
 
-/* Returns null-terminated string */
 static struct DecodedData *hex_decode(const char *str, size_t len) {
     /* Is even */
     assert(len % 2 == 0);
