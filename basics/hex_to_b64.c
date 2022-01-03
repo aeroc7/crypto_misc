@@ -2,19 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../crypt_helpers.h"
+
 static const char *B64_TABLE =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-static long hex_to_decimal(const char *data) {
-    uint_fast8_t hex_quivs[2];
-
-    for (int i = 0; i < 2; ++i) {
-        char bytea[] = {data[i], '\0'};
-        hex_quivs[i] = strtol(bytea, NULL, 16);
-    }
-
-    return (hex_quivs[0] * 16) + hex_quivs[1];
-}
 
 size_t b64_encoded_size(size_t len) {
     size_t b64_len = len;
@@ -40,9 +31,9 @@ char *encode_b64(const char *data, size_t size) {
     for (size_t i = 0; i < size; i += 6, b64i += 4) {
         v = 0;
 
-        const char v1 = hex_to_decimal(&data[i]);
-        const char v2 = hex_to_decimal(&data[i + 2]);
-        const char v3 = hex_to_decimal(&data[i + 4]);
+        const char v1 = hex_to_decimal_byte(&data[i]);
+        const char v2 = hex_to_decimal_byte(&data[i + 2]);
+        const char v3 = hex_to_decimal_byte(&data[i + 4]);
 
         const char ndata[] = {v1, v2, v3};
 
@@ -70,7 +61,7 @@ int main(int argc, char *argv[]) {
         "6e6f7573206d757368726f6f6d";
 
     const char *encoded_data = encode_b64(data, sizeof(data) - 1);
-    printf("%s", encoded_data);
+    printf("%s\n", encoded_data);
     free((void *)encoded_data);
 
     return EXIT_SUCCESS;

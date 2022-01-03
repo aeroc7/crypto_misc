@@ -4,49 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct DecodedData {
-    uint8_t *data;
-    size_t size;
-};
-
-static void *free_decoded_data(struct DecodedData *s) {
-    free(s->data);
-    free(s);
-
-    return NULL;
-}
-
-static long hex_to_decimal_byte(const char *data) {
-    uint_fast8_t hex_quivs[2];
-
-    for (int i = 0; i < 2; ++i) {
-        char bytea[] = {data[i], '\0'};
-        hex_quivs[i] = strtol(bytea, NULL, 16);
-    }
-
-    return (hex_quivs[0] * 16) + hex_quivs[1];
-}
-
-static struct DecodedData *hex_decode(const char *str, size_t len) {
-    /* Is even */
-    assert(len % 2 == 0);
-
-    struct DecodedData *data;
-    size_t decoded_i = 0;
-
-    data = malloc(sizeof(struct DecodedData));
-    data->size = len / 2;
-    data->data = malloc(data->size + 1);
-
-    for (size_t i = 0; i < len; i += 2, decoded_i += 1) {
-        const long val = hex_to_decimal_byte(&str[i]);
-        data->data[decoded_i] = val;
-    }
-
-    data->data[data->size] = '\0';
-
-    return data;
-}
+#include "../crypt_helpers.h"
 
 static struct DecodedData *xor_with(
     const struct DecodedData *data1, const struct DecodedData *data2) {
@@ -83,9 +41,9 @@ int main() {
 
     putchar('\n');
 
-    decoded_data = free_decoded_data(decoded_data);
-    decoded_xor_data = free_decoded_data(decoded_xor_data);
-    result = free_decoded_data(result);
+    decoded_data = free_hex_decode(decoded_data);
+    decoded_xor_data = free_hex_decode(decoded_xor_data);
+    result = free_hex_decode(result);
 
     return EXIT_SUCCESS;
 }
