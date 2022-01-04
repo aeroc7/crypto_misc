@@ -12,7 +12,7 @@ struct DecodedData {
     size_t size;
 };
 
-enum PrintType { PRINT_TYPE_NUM, PRINT_TYPE_CHAR };
+enum PrintType { PRINT_TYPE_NUM, PRINT_TYPE_CHAR, PRINT_TYPE_HEX };
 
 static long hex_to_decimal_byte(const char *data) {
     uint_fast8_t hex_quivs[2];
@@ -54,6 +54,8 @@ static void print_decoded_data(
         fmt_str = "%i ";
     } else if (pt == PRINT_TYPE_CHAR) {
         fmt_str = "%c ";
+    } else if (pt == PRINT_TYPE_HEX) {
+        fmt_str = "%x ";
     }
 
     for (size_t i = 0; i < dd->size; ++i) {
@@ -80,6 +82,15 @@ static void strip_newline(char *line) {
             return;
         }
     }
+}
+
+static struct DecodedData *new_decode(const char *data, size_t size) {
+    struct DecodedData *ret_data = malloc(sizeof(struct DecodedData));
+    ret_data->size = size;
+    ret_data->data = malloc(size);
+    memcpy(ret_data->data, data, size);
+
+    return ret_data;
 }
 
 #endif
